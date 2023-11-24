@@ -1,24 +1,20 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, Modal} from 'react-native';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import BaseUrl from '../Validation/BaseUrl';
 const StudentCard = ({
     navigation,
+    colegio,
     clase,
-    estudiante,
-    studentName ,
-    studenLastName,
-    fathersName,
-    fathersLasName,
-    fathersCellPhone,
+    className,
+    tutorName,
+    tutorsCellphone, 
     actualizar}) => {
-
-        const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     const Url = BaseUrl();
-
     const deleteStudent = async () => {
         try{
-            const quere = await fetch(Url+'estudiante/'+clase+'/'+estudiante,{
+            const quere = await fetch(Url+'clase/'+colegio+'/'+clase,{
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -30,35 +26,27 @@ const StudentCard = ({
             console.log(error)
         }
     }
-        const closeModal = () => {
-            setShowModal(false);
-            actualizar(); // Llamar a la función 'actualizar' después de cerrar el modal
-            }
+    const closeModal = () => {
+        setShowModal(false);
+        actualizar(); // Llamar a la función 'actualizar' después de cerrar el modal
+    }
     return (
         <View style={styles.containerStudentCard}>
             <View style={styles.studentInformationContainer}>
-                <Text>Nombre: {studentName}</Text>
-                <Text>Apellido: {studenLastName}</Text>
-                <Text>Nombre del padre: {fathersName}</Text>
-                <Text>Apellido del padre: {fathersLasName}</Text>
-                <Text>CELULAR: {fathersCellPhone}</Text>
+                <Text>Clase: {className}</Text>
+                <Text>Nombre del tutor: {tutorName}</Text>
+                <Text>Celular del tutor: {tutorsCellphone}</Text>
             </View>
             <View style={styles.studentOptionsContainer}>
-                <TouchableOpacity onPress={()=>navigation.navigate('AddStudent', 
-                    {tipo:'EditStudent',idClase: clase,
-                    idEstudiante:estudiante,
-                    nombreEstudiante: studentName,
-                    apellidoEstudiante: studenLastName,
-                    nombreApoderado: fathersName,
-                    apellidoApoderado: fathersLasName,
-                    celularApoderado: fathersCellPhone})}>
-                    <Image source={require('../img/editIcon.png')} style={styles.studentOptionsImg} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=> navigation.navigate('Message',{nombreEstudiante: studentName})}>
-                    <Image source={require('../img/smsIcon.png')} style={styles.studentOptionsImg}/>
-                </TouchableOpacity>
                 <TouchableOpacity onPress={()=>deleteStudent()}>
                     <Image source={require('../img/deleteIcon.png')} style={styles.studentOptionsImg}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>navigation.navigate('AddClass', 
+                {tipo:'EditClass',idColegio: colegio,
+                idClase:clase,nombreClase: className,
+                tutorClase: tutorName ,
+                celularTutor: tutorsCellphone})}>
+                    <Image source={require('../img/editIcon.png')} style={styles.studentOptionsImg}/>
                 </TouchableOpacity>
             </View>
             <Modal
@@ -70,7 +58,7 @@ const StudentCard = ({
           
         <View style={styles.modalContainer}>
               <Image source={require('../img/successIcon.png')} style={{marginBottom: 10,}}/>
-              <Text style={{fontSize:15, marginBottom:10}}>Se elimino con exito al estudiante "{studentName}"</Text>
+              <Text style={{fontSize:15, marginBottom:10}}>Se elimino con exito a la clase {className}</Text>
           <TouchableOpacity style={styles.buttonContainerModal} onPress={closeModal} >
             <Text>Close</Text>
           </TouchableOpacity>
@@ -90,7 +78,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         padding: 10,
-        paddingBottom: 10,
+        paddingBottom: 0,
         flexDirection: 'row',
     },
     studentInformationContainer: {

@@ -1,18 +1,13 @@
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
-const NavBarHome = ({navigation}) => {
-  const algo = () => {
-    console.log('hola');
-  }
-
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import BackBar from './BackBar';
+const NavBarHome = ({navigation, text, nameClase}) => {
   return (
-    <View>
-        <View style={styles.headerContainer}>
-            <Image source={require('../img/logo.png')} style={styles.logoImg}/>
-            <Text style={styles.textHeader}>KidWatch</Text>
-        </View>
+    <View style={{marginBottom:20}}>
+        <BackBar navigation={navigation}/>
         <View style={styles.titleContainer}>
-            <Image source={require('../img/logo.png')} style={styles.tittleImg}/>
-            <Text style={styles.textTittle}>ALUMNOS</Text>
+            {nameClase == '' ? <Text style={styles.textTittle}>{text}</Text> : 
+            <Text style={styles.textTittle}>{text} "{nameClase}"</Text>}
+            
         </View>
     </View>
     )
@@ -21,9 +16,9 @@ const NavBarHome = ({navigation}) => {
 const styles = StyleSheet.create({
     headerContainer: {
         padding: 10,
-        paddingTop: 0,
-        backgroundColor: 'black',
+        backgroundColor: '#F2F2F2',
         flexDirection: 'row',
+        borderWidth: 1,
     },
     logoImg: {
         width: 23,
@@ -32,24 +27,22 @@ const styles = StyleSheet.create({
     },
     textHeader: {
         fontSize: 20,
-        color: 'white',
+        color: 'black',
     },
     titleContainer:{
-        flexDirection: 'row',
-        padding: 10,
-        paddingLeft: 20,
-    },
-    tittleImg:{
-        width: 50,
-        height: 50,
-        marginRight: 80,
+        width: '90%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        justifyContent: 'center',
+        alignItems: 'center',
+        
     },
     textTittle:{
         fontSize: 30,
-        color: 'white',
+        fontWeight: 'bold',
+        color: 'black',
         marginTop: 10,
     },
 })
-
 
 export default NavBarHome;

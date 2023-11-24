@@ -1,34 +1,56 @@
+/*
 import {StyleSheet, View , Text, SafeAreaView, Image, TextInput, TouchableOpacity,FlatList} from "react-native"
-import StudentCard from "../Components/StudentCard";
+import React from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import ClassCard from "../Components/ClassCard";
 import NavBarHome from "../Components/NavBarHome";
-const Home = ({navigation}) => {
+import { useEffect, useState } from "react";
+import BaseUrl from "../Validation/BaseUrl";
+const Home = ({navigation, route}) => {
+    const Url = BaseUrl();
+    const colegio = route.params.idColegio;
+    const [data, setData] = useState([]);
     const algo = () => {
-        navigation.navigate('AddStudent');
+        navigation.navigate('AddStudent')
     }
-    const data = [
-        { id: '1', name: 'Student 1' },
-        { id: '2', name: 'Student 2' },
-        { id: '3', name: 'Student 3' },
-        { id: '4', name: 'Student 4' },
-        { id: '5', name: 'Student 5' },
-        { id: '6', name: 'Student 6' },
-        { id: '7', name: 'Student 7' },
-        { id: '8', name: 'Student 8' },
-      ];
+    const loadData = async () => {
+        try{
+            const response = await fetch(Url +'clases/'+ colegio);
+            setData(await response.json());
+        }catch(error){
+
+        }
+    }
+    useFocusEffect(
+        React.useCallback(() => {
+          loadData();
+        }, [])
+      );
     return (
         <View style={styles.Maincontainer}>
-            <NavBarHome/>
-            <View style={styles.searchContainer}>
-                <TextInput placeholder="Buscar por nombre" style={styles.searchInput}></TextInput>
-                <TouchableOpacity onPress={() => algo()}>
-                    <Image source={require('../img/logo.png')} style={styles.searchImg} />
-                </TouchableOpacity>
-            </View>
-            <FlatList
-                data={data}
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => <StudentCard student={item} />}
-            />
+            <NavBarHome navigation={navigation} text="Lista de las clases"/>
+                <FlatList
+                    data={data}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                    <TouchableOpacity onPress={()=> navigation.navigate('HomeStudents',{idClase:item.id, nombreClase:item.nombreClase})}>
+                        <ClassCard 
+                        navigation = {navigation} 
+                        colegio = {colegio}
+                        clase = {item.id}
+                        className = {item.nombreClase}
+                        tutorName = {item.tutorClase}
+                        tutorsCellphone = {item.celularTutor}
+                        actualizar = {loadData}
+                        />
+                    </TouchableOpacity>
+                    )}
+                />   
+                <View style={styles.addIcon}>
+                    <TouchableOpacity onPress={()=>navigation.navigate('AddClass',{tipo: 'AddClass', idColegio:colegio})}>
+                        <Image source={require('../img/addIcon.png')} />
+                    </TouchableOpacity>
+                </View>
         </View>
     )
 }
@@ -58,6 +80,12 @@ const styles = StyleSheet.create({
         height: 'auto',
         padding: 10,
     },
+    addIcon:{
+        position: 'absolute',
+        bottom: 40,
+        right: 60,
+    }
 })
 
 export default Home
+*/
